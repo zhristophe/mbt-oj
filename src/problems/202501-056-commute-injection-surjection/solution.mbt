@@ -1,25 +1,40 @@
-///| 令x -> n为恒等映射即可
+///| 令x -> n为恒等映射
+///  然后调整它保证m -> x是满射
 fn solution(
   injection~ : Array[Int],
   surjection~ : Array[Int]
 ) -> (Array[Int], Array[Int]) {
-  let s2 = Array::makei(surjection.length(), fn { _ => 1 })
-  let i2 = []
-  let mut last = 0
-  for i in 1..=injection.length() {
-    let x = apply_inj(injection, i)
-    let j = apply_sur(surjection, x)
-    if j == last {
-      i2[i2.length() - 1] += 1
-    } else {
-      for _ in (last + 1)..<j {
-        i2.push(0)
+  let (i1, s1) = (injection, surjection)
+  let n = i1.length()
+  let (s2, i2) = ([], [])
+  let mut mid = 0
+  let mut y = 0
+  let mut sum = 0
+  let mut last_y = 0
+  for x in 1..=n {
+    mid += i1[x - 1]
+    while mid > sum {
+      sum += s1[y]
+      y += 1
+    }
+    match y - last_y {
+      0 => s2[s2.length() - 1] += 1
+      d if d > 0 => {
+        i2.push(d)
+        s2.push(1)
+        last_y = y
       }
-      i2.push(1)
-      last = j
+      _ => panic()
     }
   }
-  (i2, s2)
+  (s2, i2)
+}
+
+///|
+test {
+  println(solution(injection=[1, 1, 1, 1], surjection=[2, 1, 1]))
+  println(solution(injection=[1, 20, 4], surjection=[3, 2, 20]))
+  println(solution(injection=[1, 1], surjection=[1, 0, 1]))
 }
 
 ///|

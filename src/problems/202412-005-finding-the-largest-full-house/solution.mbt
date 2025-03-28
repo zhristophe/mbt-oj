@@ -1,35 +1,34 @@
-///|
+///| 1最大
 fn solution(max : Int, cards : Array[Int]) -> (Int, Int) {
-  let table = @hashmap.new()
-  for card in cards {
-    let tmp = table.get(card).or(0) + 1
-    table.set(card, tmp)
+  let cards = {
+    let tmp = Array::make(14, 0)
+    for card in cards {
+      tmp[card] += 1
+    }
+    tmp
   }
-  let card_and_count = table.to_array()
-  card_and_count.sort_by(fn { a, b => b.0 - a.0 })
-  for a in 0..<card_and_count.length() {
-    if card_and_count[a].1 < 3 {
+  for a in 1..=13 {
+    let a = if a == 1 { 1 } else { 15 - a }
+    if 3 * a > max || cards[a] < 3 {
       continue
     }
-    let a = card_and_count[a].0
-    for b in 0..<card_and_count.length() {
-      if a == b {
+    cards[a] -= 3
+    for b in 1..=13 {
+      let b = if b == 1 { 1 } else { 15 - b }
+      if b == a {
         continue
       }
-      if card_and_count[b].1 < 2 {
-        continue
-      }
-      let b = card_and_count[b].0
-      let sum = a * 3 + b * 2
-      if sum > max {
+      if 3 * a + 2 * b > max || cards[b] < 2 {
         continue
       }
       return (a, b)
     }
+    cards[a] += 3
   }
   (0, 0)
 }
 
+///|
 test {
   inspect!(solution(34, [6, 6, 6, 8, 8, 8, 5, 5, 1]), content="(8, 5)")
   inspect!(solution(37, [9, 9, 9, 9, 6, 6, 6, 6, 13]), content="(6, 9)")

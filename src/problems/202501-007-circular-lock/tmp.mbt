@@ -1,6 +1,6 @@
-///| 实际上是往左移一位
-/// 状态空间太大，不可能是dp
-fn solution(n : String) -> Int {
+///| 滚动数字，记忆化搜索
+/// 其中，0一定是被移位消去
+fn tmp(n : String) -> Int {
   let q = @queue.new()
   let n = try {
     @strconv.parse_uint64!(n)
@@ -140,11 +140,4 @@ fn BigInt::copy(self : BigInt) -> BigInt {
 test {
   inspect!(solution("1000_000"), content="1")
   inspect!(solution("99999908999"), content="10")
-}
-
-///|
-test {
-  let a = 1
-  let c = a
-  println(c)
 }
